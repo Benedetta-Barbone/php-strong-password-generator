@@ -1,19 +1,19 @@
-<!--
-La pagina di login (login.php) ci redireziona, una volta effettuato e SOLO se avvenuto correttamente,
-alla pagina principale della nostra applicazione (index.php), in cui visualizziamo via sessione il nome dell'utente loggato.
-Creiamo poi una pagina di logout (logout.php) che rimuova le informazioni della sessione dalla sessione attuale e redirezioni
-all pagina di login (login.php). -->
-
 <?php
+session_start();
+include 'users.php';
 
-if (isset($_GET['username']) && isset($_GET['psw'])) {
-    $username = $_GET['username'];
-    $psw = $_GET['psw'];
 
-    if (isset($utentiIscritti['username']) && $utentiIscritti['username'] === $psw) {
+    $username = $_POST['username'];
+    $psw = $_POST['psw'];
+
+    foreach ($users as $user) {
+        if ($user['username'] === $username && $user['psw'] === $psw) {
             $_SESSION['username'] = $username;
+            header('Location: index.php');
+            exit();
+        }
     }
-}
+    $error = "Username o password errati!";
 
 ?>
 
@@ -32,17 +32,16 @@ if (isset($_GET['username']) && isset($_GET['psw'])) {
         </h1>
     </header>
     <main>
+        <?php if (isset($error)): ?>
+            <p style="color:red;"><?php echo $error; ?></p>
+        <?php endif; ?>
         <div>
-            <form action="login.php" method="get">
-                <div>
-                    <label for="username">Inserisci il tuo username</label>
-                    <input type="text" name="username" id="username" required>
-                </div>
-                <div>
-                    <label for="psw">Inserisci la tua password</label>
-                    <input type="password" name="psw" id="psw" required>
-                </div>
-                <input type="submit" value="Accedi">
+            <form action="login.php" method="post">
+                <label for="username">Inserisci il tuo username</label>
+                <input type="text" name="username" id="username" required>
+                <label for="psw">Inserisci la tua password</label>
+                <input type="password" name="psw" id="psw" required>
+                <button type="submit">Accedi</button>
             </form>
         </div>
     </main>

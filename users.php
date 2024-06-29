@@ -1,8 +1,5 @@
 <?php
-
-session_start();
-
-$utentiIscritti = [
+$users = [
     [
         'username' => 'ercolino',
         'psw' => 'giorgio86',
